@@ -1,6 +1,6 @@
 {
   "name": "redux-scripts-manager",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Manage dynamic script loading with Redux",
   "main": "index.js",
   "scripts": {
