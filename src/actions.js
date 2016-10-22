@@ -1,5 +1,4 @@
 import { register } from './listeners';
-
 import {
   LOAD_SCRIPT,
   SCRIPT_LOADED,
