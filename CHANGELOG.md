@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.1] -2016-10-22
+### Changed
+- Updated build status badge style
+
 ## [0.1.0] - 2016-10-22
 ### Added
 - `loadScript(src)` action creator now returns a `Promise` that resolves when the script has loaded
