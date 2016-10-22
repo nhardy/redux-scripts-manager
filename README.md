@@ -1,5 +1,7 @@
 # Redux Scripts Manager
 
+[![Coverage Status](https://coveralls.io/repos/github/nhardy/redux-scripts-manager/badge.svg?branch=master)](https://coveralls.io/github/nhardy/redux-scripts-manager?branch=master)
+
 This library allows for the management of dynamic script loading on the client with Redux.
 This allows you to conditionally load scripts that don't always need to load on your site, like third party APIs for social media or maps.
 
