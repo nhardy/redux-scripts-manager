@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel ./src --source-maps --out-dir ./dist",
     "clean": "GLOBIGNORE=.gitignore:.npmignore rm -rf ./dist/*",
-    "cover": "babel-node ./node_modules/.bin/isparta cover _mocha -- --reporter min",
+    "cover": "NODE_ENV=test nyc --reporter=lcov --reporter=text npm test -- --reporter min",
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint ./src ./test",
     "preversion": "npm run build",
@@ -33,10 +33,15 @@
     "url": "https://github.com/nhardy/redux-scripts-manager/issues"
   },
   "homepage": "https://github.com/nhardy/redux-scripts-manager#readme",
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false
+  },
   "devDependencies": {
     "app-module-path": "^2.1.0",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
+    "babel-plugin-istanbul": "^2.0.3",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "chai": "^3.5.0",
@@ -45,8 +50,8 @@
     "eslint": "^3.8.0",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-config-nhardy": "^0.2.1",
-    "isparta": "^4.0.0",
     "mocha": "^3.1.2",
+    "nyc": "^8.3.2",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0"

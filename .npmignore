@@ -5,6 +5,7 @@
 .git
 .gitignore
 .npm
+.nyc_output
 circle.yml
 coverage
 node_modules

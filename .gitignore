@@ -1,5 +1,6 @@
 *.log
 .npm
+.nyc_output
 coverage
 node_modules
 npm-debug.log
