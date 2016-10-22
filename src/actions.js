@@ -1,13 +1,24 @@
+import { register } from './listeners';
+
 import {
   LOAD_SCRIPT,
   SCRIPT_LOADED,
 } from './constants';
 
 
-export function loadScript(src) {
+function _loadScript(src) {
   return {
     type: LOAD_SCRIPT,
     src,
+  };
+}
+
+export function loadScript(src) {
+  return (dispatch) => {
+    return new Promise((resolve) => {
+      register(src, resolve);
+      dispatch(_loadScript(src));
+    });
   };
 }
 

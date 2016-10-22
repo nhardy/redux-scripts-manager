@@ -6,11 +6,12 @@
   "scripts": {
     "build": "babel ./src --source-maps --out-dir ./dist",
     "clean": "GLOBIGNORE=.gitignore:.npmignore rm -rf ./dist/*",
-    "lint": "eslint ./src",
+    "cover": "babel-node ./node_modules/.bin/isparta cover _mocha -- --reporter min",
+    "lint": "eslint ./src ./test",
     "preversion": "npm run build",
     "postversion": "git push --follow-tags",
     "start": "npm run clean && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "watch": "npm run clean && babel ./src --source-maps --watch --out-dir ./dist"
   },
   "repository": {
@@ -32,14 +33,27 @@
   },
   "homepage": "https://github.com/nhardy/redux-scripts-manager#readme",
   "devDependencies": {
+    "app-module-path": "^2.1.0",
     "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "eslint": "^3.8.0",
     "eslint-config-airbnb": "^12.0.0",
-    "eslint-config-nhardy": "^0.2.1"
+    "eslint-config-nhardy": "^0.2.1",
+    "isparta": "^4.0.0",
+    "mocha": "^3.1.2",
+    "proxyquire": "^1.7.10",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0"
   },
   "dependencies": {
     "lodash": "^4.16.4"
+  },
+  "peerDependencies": {
+    "redux": "*",
+    "redux-thunk": "*"
   }
 }

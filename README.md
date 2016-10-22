@@ -1,7 +1,13 @@
 # Redux Scripts Manager
 
-Manage dynamic script loading with Redux.
-This package is a work-in-progress and its API and usage is subject to change. Use at your own risk.
+This library allows for the management of dynamic script loading on the client with Redux.
+This allows you to conditionally load scripts that don't always need to load on your site, like third party APIs for social media or maps.
+
+## Peer Dependencies
+
+Requires:
+- [`redux`](http://reduxjs.org)
+- [`redux-thunk`](https://github.com/gaearon/redux-thunk)
 
 ## Usage
 
@@ -13,7 +19,7 @@ import { reducer as scripts } from 'redux-scripts-manager';
 
 
 export default combineReducers({
-  scripts,
+  scripts, // If you're giving this an alternate key, make sure you use that key when you register with the store
 
   // Your reducers
 });
@@ -26,7 +32,7 @@ export default combineReducers({
 import scriptsManager from 'redux-scripts-manager';
 
 
-scriptsManager(store); // Register with the store
+scriptsManager(store); // Register with the store. Optionally takes a second parameter for the key in the store
 
 ```
 
@@ -37,18 +43,12 @@ import { loadScript } from 'redux-scripts-manager';
 
 const src = '//example.org/path/to/script.js';
 
-@connect((state) => ({
-  scriptLoaded: state.scripts.loaded.includes(src),
-}), { loadScript })
+@connect(null, { loadScript })
 export default class Thing Extends React.Component {
   componentDidMount() {
-    this.props.loadScript(src);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.loaded && this.props.loaded) {
-      // Do stuff with the newly loaded script
-    }
+    this.props.loadScript(src).then(() => {
+      // Do Some stuff
+    });
   }
 }
 

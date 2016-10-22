@@ -2,6 +2,7 @@ import difference from 'lodash/difference';
 
 import { scriptLoaded } from './actions';
 import { initialState } from './reducer';
+import { notify } from './listeners';
 
 
 export default function manager(store, path = 'scripts') {
@@ -20,7 +21,10 @@ export default function manager(store, path = 'scripts') {
       script.src = src;
       script.type = 'text/javascript';
       script.async = true;
-      script.onload = () => store.dispatch(scriptLoaded(src));
+      script.onload = () => {
+        store.dispatch(scriptLoaded(src));
+        notify(src);
+      };
       head.appendChild(script);
     });
   });
