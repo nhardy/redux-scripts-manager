@@ -21,10 +21,21 @@ export default function manager(store, path = 'scripts') {
       script.src = src;
       script.type = 'text/javascript';
       script.async = true;
-      script.onload = () => {
-        store.dispatch(scriptLoaded(src));
-        notify(src);
-      };
+
+      const onload = state.callbacks[src];
+      if (onload) {
+        window[onload] = () => {
+          store.dispatch(scriptLoaded(src));
+          notify(src);
+          delete window[onload];
+        };
+      } else {
+        script.onload = () => {
+          store.dispatch(scriptLoaded(src));
+          notify(src);
+        };
+      }
+
       head.appendChild(script);
     });
   });

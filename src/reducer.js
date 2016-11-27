@@ -9,6 +9,7 @@ import {
 export const initialState = {
   loading: [],
   loaded: [],
+  callbacks: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -17,12 +18,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: uniq([...state.loading, action.src]),
+        callbacks: {
+          ...state.callbacks,
+          [action.src]: action.onload,
+        },
       };
 
     case SCRIPT_LOADED:
       return {
         ...state,
         loaded: uniq([...state.loaded, action.src]),
+        callbacks: {
+          ...state.callbacks,
+          [action.src]: undefined,
+        },
       };
 
     default:

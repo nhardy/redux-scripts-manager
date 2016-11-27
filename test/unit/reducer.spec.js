@@ -12,6 +12,7 @@ describe('Reducer', () => {
     expect(reducer(undefined, { type: '@@INIT' })).to.deep.equal({
       loading: [],
       loaded: [],
+      callbacks: {},
     });
   });
 
@@ -19,9 +20,13 @@ describe('Reducer', () => {
     expect(reducer({
       loading: [],
       loaded: [],
+      callbacks: {},
     }, { type: LOAD_SCRIPT, src })).to.deep.equal({
       loading: [src],
       loaded: [],
+      callbacks: {
+        [src]: undefined,
+      },
     });
   });
 
@@ -29,9 +34,28 @@ describe('Reducer', () => {
     expect(reducer({
       loading: [src],
       loaded: [],
+      callbacks: {},
     }, { type: LOAD_SCRIPT, src })).to.deep.equal({
       loading: [src],
       loaded: [],
+      callbacks: {
+        [src]: undefined,
+      },
+    });
+  });
+
+  it('should handle LOAD_SCRIPT correctly when there is an onload prop', () => {
+    const onload = '__rsmCallback';
+    expect(reducer({
+      loading: [],
+      loaded: [],
+      callbacks: {},
+    }, { type: LOAD_SCRIPT, src, onload })).to.deep.equal({
+      loading: [src],
+      loaded: [],
+      callbacks: {
+        [src]: onload,
+      },
     });
   });
 
@@ -39,9 +63,15 @@ describe('Reducer', () => {
     expect(reducer({
       loading: [src],
       loaded: [],
+      callbacks: {
+        [src]: '__rsmCallback',
+      },
     }, { type: SCRIPT_LOADED, src })).to.deep.equal({
       loading: [src],
       loaded: [src],
+      callbacks: {
+        [src]: undefined,
+      },
     });
   });
 

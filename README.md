@@ -54,6 +54,22 @@ export default class Thing Extends React.Component {
     });
   }
 }
+```
 
+```javascript
+// React component
 
+import { loadScript } from 'redux-scripts-manager';
+
+// For scripts which provide a JSONP callback parameter
+const src = cb => `//example.org/path/to/script.js?onload=${cb}`;
+
+@connect(null, { loadScript })
+export default class Thing Extends React.Component {
+  componentDidMount() {
+    this.props.loadScript(src).then(() => {
+      // Do Some stuff
+    });
+  }
+}
 ```

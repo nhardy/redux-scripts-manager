@@ -32,6 +32,7 @@ describe('Manager', () => {
     store = { getState, dispatch, subscribe };
     const querySelector = sandbox.stub();
     const createElement = sandbox.stub();
+    global.window = {};
     global.document = {
       querySelector,
       createElement,
@@ -45,6 +46,7 @@ describe('Manager', () => {
   });
 
   after(() => {
+    delete global.window;
     delete global.document;
   });
 
@@ -75,31 +77,59 @@ describe('Manager', () => {
         expect(document.querySelector).to.not.have.been.called;
       });
 
-      it('should insert the script, and run onload when the script loads', () => {
-        updateStore({
-          loading: [src],
-          loaded: [],
+      context('without a custom callback', () => {
+        it('should insert the script, and run onload when the script loads', () => {
+          updateStore({
+            loading: [src],
+            loaded: [],
+            callbacks: {},
+          });
+          expect(head.appendChild).to.have.been.called;
+          const script = head.appendChild.lastCall.args[0];
+          expect(script).to.include({
+            src,
+            type: 'text/javascript',
+            async: true,
+          });
+          script.onload();
+          expect(dispatch).to.have.been.calledWith(mockAction);
+          expect(notify).to.have.been.calledWith(src);
         });
-        expect(head.appendChild).to.have.been.called;
-        const script = head.appendChild.lastCall.args[0];
-        expect(script).to.include({
-          src,
-          type: 'text/javascript',
-          async: true,
+      });
+
+      context('with a custom callback', () => {
+        const onloadCallback = '__rsmCallback';
+        it('should insert the script, and run onload when the script loads', () => {
+          updateStore({
+            loading: [src],
+            loaded: [],
+            callbacks: {
+              [src]: onloadCallback,
+            },
+          });
+          expect(head.appendChild).to.have.been.called;
+          const script = head.appendChild.lastCall.args[0];
+          expect(script).to.include({
+            src,
+            type: 'text/javascript',
+            async: true,
+          });
+          window[onloadCallback]();
+          expect(dispatch).to.have.been.calledWith(mockAction);
+          expect(notify).to.have.been.calledWith(src);
         });
-        script.onload();
-        expect(dispatch).to.have.been.calledWith(mockAction);
-        expect(notify).to.have.been.calledWith(src);
       });
 
       it('should not load the same script twice', () => {
         updateStore({
           loading: [src],
           loaded: [],
+          callbacks: {},
         });
         updateStore({
           loading: [src],
           loaded: [],
+          callbacks: {},
         });
 
         expect(head.appendChild).to.have.been.calledOnce;

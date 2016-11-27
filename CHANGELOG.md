@@ -1,6 +1,10 @@
 # Changelog
 
-## [0.1.1] -2016-10-22
+## [0.2.0] - 2016-11-27
+### Added
+- `loadScript(src)` action creator can now take a single-parameter `Function` for JSONP callbacks
+
+## [0.1.1] - 2016-10-22
 ### Changed
 - Updated build status badge style
 
