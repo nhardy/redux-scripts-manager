@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1] - 2017-10-06
+### Changed
+- Updated devDependencies (this may cause issues with older versions of Node)
+
 ## [0.3.0] - 2017-10-06
 ### Added
 - `loadScript(src, callbackName)` action creator can now take an optional second parameter for specific JSONP callbacks
