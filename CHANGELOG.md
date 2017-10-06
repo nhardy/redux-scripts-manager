@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.2] - 2017-10-07
+### Fixed
+- Fixed broken linting/tests
+
 ## [0.3.1] - 2017-10-06
 ### Changed
 - Updated devDependencies (this may cause issues with older versions of Node)

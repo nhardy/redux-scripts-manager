@@ -17,16 +17,14 @@ function _loadScript(src, callbackName) {
   };
 }
 
-export function loadScript(src, callbackName) {
-  return (dispatch) => {
-    return new Promise((resolve) => {
-      const isCustomCallbackName = isFunction(src);
-      const _callbackName = callbackName || (isCustomCallbackName && `${CALLBACKS_NAMESPACE}${sha1(src(''))}`.substr(0, 16)) || null;
-      const _src = isCustomCallbackName ? src(_callbackName) : src;
-      register(_src, resolve);
-      dispatch(_loadScript(_src, _callbackName));
-    });
-  };
+export function loadScript(src, callbackName = null) {
+  return dispatch => new Promise((resolve) => {
+    const isCustomCallbackName = isFunction(src);
+    const _callbackName = callbackName || (isCustomCallbackName && `${CALLBACKS_NAMESPACE}${sha1(src(''))}`.substr(0, 16)) || null;
+    const _src = isCustomCallbackName ? src(_callbackName) : src;
+    register(_src, resolve);
+    dispatch(_loadScript(_src, _callbackName));
+  });
 }
 
 export function scriptLoaded(src) {

@@ -36,7 +36,7 @@ describe('Action Creators', () => {
       context(`src is a ${type}${callbackName ? ' with a callbackName' : ''}`, () => {
         const fakeHash = 'fakeSha1HashString';
         if (type === 'function') {
-          before(() => {
+          beforeEach(() => {
             sha1.withArgs(src('')).returns(fakeHash);
           });
         }
@@ -63,9 +63,9 @@ describe('Action Creators', () => {
             register.callsArgAsync(1);
           });
 
-          it('when dispatched, should return a Promise that resolves', () => {
-            return expect(actions.loadScript(src)(dispatch)).to.eventually.be.fulfilled;
-          });
+          it('when dispatched, should return a Promise that resolves', () => (
+            expect(actions.loadScript(src)(dispatch)).to.eventually.be.fulfilled
+          ));
 
         });
 
@@ -75,9 +75,9 @@ describe('Action Creators', () => {
             register.callsArg(1);
           });
 
-          it('when dispatched, should return a Promise that resolves', () => {
-            return expect(actions.loadScript(src)(dispatch)).to.eventually.be.fulfilled;
-          });
+          it('when dispatched, should return a Promise that resolves', () => (
+            expect(actions.loadScript(src)(dispatch)).to.eventually.be.fulfilled
+          ));
 
         });
 
