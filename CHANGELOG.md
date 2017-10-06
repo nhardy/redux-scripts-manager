@@ -1,6 +1,10 @@
 # Changelog
 
-## [0.3.2] - 2017-10-07
+## [0.3.3] - 2017-10-06
+### Fixed
+- Babel target environment
+
+## [0.3.2] - 2017-10-06
 ### Fixed
 - Fixed broken linting/tests
 
