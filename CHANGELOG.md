@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.0] - 2017-10-06
+### Added
+- `loadScript(src, callbackName)` action creator can now take an optional second parameter for specific JSONP callbacks
+
 ## [0.2.0] - 2016-11-27
 ### Added
 - `loadScript(src)` action creator can now take a single-parameter `Function` for JSONP callbacks

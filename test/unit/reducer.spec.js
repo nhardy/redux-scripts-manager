@@ -44,17 +44,17 @@ describe('Reducer', () => {
     });
   });
 
-  it('should handle LOAD_SCRIPT correctly when there is an onload prop', () => {
-    const onload = '__rsmCallback';
+  it('should handle LOAD_SCRIPT correctly when there is a callbackName prop', () => {
+    const callbackName = '__rsmCallback';
     expect(reducer({
       loading: [],
       loaded: [],
       callbacks: {},
-    }, { type: LOAD_SCRIPT, src, onload })).to.deep.equal({
+    }, { type: LOAD_SCRIPT, src, callbackName })).to.deep.equal({
       loading: [src],
       loaded: [],
       callbacks: {
-        [src]: onload,
+        [src]: callbackName,
       },
     });
   });

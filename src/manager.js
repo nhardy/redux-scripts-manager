@@ -22,12 +22,12 @@ export default function manager(store, path = 'scripts') {
       script.type = 'text/javascript';
       script.async = true;
 
-      const onload = state.callbacks[src];
-      if (onload) {
-        window[onload] = () => {
+      const callbackName = state.callbacks[src];
+      if (callbackName) {
+        window[callbackName] = () => {
           store.dispatch(scriptLoaded(src));
           notify(src);
-          delete window[onload];
+          delete window[callbackName];
         };
       } else {
         script.onload = () => {

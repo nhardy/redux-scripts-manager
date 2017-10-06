@@ -6,7 +6,8 @@ const loaded = [];
 
 function fire(src) {
   let listener;
-  while ((listener = listeners[src].pop())) { // eslint-disable-line no-cond-assign
+  // eslint-disable-next-line no-cond-assign
+  while ((listener = listeners[src].pop())) {
     listener();
   }
 }

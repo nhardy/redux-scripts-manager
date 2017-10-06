@@ -1,5 +1,6 @@
 # Redux Scripts Manager
 
+[![npm version](https://img.shields.io/npm/v/redux-scripts-manager.svg?style=flat)](https://www.npmjs.com/package/redux-scripts-manager)
 [![CircleCI](https://circleci.com/gh/nhardy/redux-scripts-manager.svg?style=shield&circle-token=c11fec3b5aa6a5743620a129b3ff06f8742b5f7d)](https://circleci.com/gh/nhardy/redux-scripts-manager)
 [![Coverage Status](https://coveralls.io/repos/github/nhardy/redux-scripts-manager/badge.svg?branch=master)](https://coveralls.io/github/nhardy/redux-scripts-manager?branch=master)
 
@@ -68,6 +69,24 @@ const src = cb => `//example.org/path/to/script.js?onload=${cb}`;
 export default class Thing Extends React.Component {
   componentDidMount() {
     this.props.loadScript(src).then(() => {
+      // Do Some stuff
+    });
+  }
+}
+```
+
+```javascript
+// React component
+
+import { loadScript } from 'redux-scripts-manager';
+
+const src = '//example.org/path/to/script.js';
+
+@connect(null, { loadScript })
+export default class Thing Extends React.Component {
+  componentDidMount() {
+    // For scripts that use a callback on `window`
+    this.props.loadScript(src, 'onApiLoaded').then(() => {
       // Do Some stuff
     });
   }

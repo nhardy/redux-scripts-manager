@@ -20,7 +20,7 @@ export default function reducer(state = initialState, action) {
         loading: uniq([...state.loading, action.src]),
         callbacks: {
           ...state.callbacks,
-          [action.src]: action.onload,
+          [action.src]: action.callbackName,
         },
       };
 

@@ -27,12 +27,13 @@ describe('Action Creators', () => {
     sandbox.reset();
   });
 
-  describe('loadScript(src)', () => {
+  describe('loadScript(src, ?callbackName)', () => {
     [
       { src: 'https://example.org/script.js', type: 'string' },
       { src: cb => `https://example.org/script.js?onload=${cb}`, type: 'function' },
-    ].forEach(({ src, type }) => {
-      context(`src is a ${type}`, () => {
+      { src: 'https://example.org/script.js', callbackName: 'onApiLoaded', type: 'string' },
+    ].forEach(({ src, callbackName, type }) => {
+      context(`src is a ${type}${callbackName ? ' with a callbackName' : ''}`, () => {
         const fakeHash = 'fakeSha1HashString';
         if (type === 'function') {
           before(() => {
@@ -44,15 +45,15 @@ describe('Action Creators', () => {
           expect(actions.loadScript(src)).to.be.a('function');
         });
 
-        it('should dispatch an action with the correct `type` and `src`', () => {
+        it('should dispatch an action with the correct `type`, `src` and `callbackName`', () => {
           register.callsArgAsync(1);
-          const expectedCallback = `${CALLBACKS_NAMESPACE}fakeSha1Has`;
+          const expectedCallback = callbackName || `${CALLBACKS_NAMESPACE}fakeSha1Has`;
 
           actions.loadScript(src)(dispatch);
           expect(dispatch).to.have.been.calledWith({
             type: LOAD_SCRIPT,
             src: type === 'function' ? src(expectedCallback) : src,
-            onload: type === 'function' ? expectedCallback : undefined,
+            callbackName: type === 'function' ? expectedCallback : null,
           });
         });
 
