@@ -1,5 +1,5 @@
 JOB_DEFAULTS: &JOB_DEFAULTS
-  docker
+  docker:
     - image: node:8
 
 version: 2
