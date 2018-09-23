@@ -2,7 +2,7 @@
   "name": "redux-scripts-manager",
   "version": "0.4.0",
   "description": "Manage dynamic script loading with Redux",
-  "main": "index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run clean && babel ./src --source-maps --extensions .ts --out-dir ./dist && tsc -d --declarationDir ./dist --emitDeclarationOnly",

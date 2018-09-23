@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.1] - 2018-09-23
+### Fixed
+- Fixed "main" entrypoint in package.json
+
 ## [0.4.0] - 2018-09-23
 ### Changed
 - Ported to TypeScript
