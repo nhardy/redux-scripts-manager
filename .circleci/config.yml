@@ -100,16 +100,15 @@ workflows:
             - repo
       - lint:
           requires:
-            - repo
+            - dependencies
       - types:
           requires:
-            - repo
+            - dependencies
       - build:
           requires:
-            - repo
+            - dependencies
       - coverage:
           requires:
-            - repo
             - lint
             - types
             - build
