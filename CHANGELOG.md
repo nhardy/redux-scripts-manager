@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.2] - 2018-09-23
+### Fixed
+- Fixed module alias not being transpiled
+
 ## [0.4.1] - 2018-09-23
 ### Fixed
 - Fixed "main" entrypoint in package.json

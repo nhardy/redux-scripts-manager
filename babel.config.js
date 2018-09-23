@@ -12,6 +12,15 @@ module.exports = {
   ],
   plugins: [
     'babel-plugin-lodash',
+    [
+      'module-resolver',
+      {
+        alias: {
+          src: ['./src'],
+          test: ['./test'],
+        },
+      },
+    ],
   ],
   env: {
     test: {

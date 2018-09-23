@@ -10,6 +10,7 @@ import {
 } from './constants';
 
 type IScriptSrcFunction = (callbackName: string) => string;
+
 export type IScriptSrc = string | IScriptSrcFunction;
 
 /**
