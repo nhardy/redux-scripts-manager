@@ -3,9 +3,7 @@ import _manager from 'src/manager';
 import * as actions from 'src/actions';
 import _reducer from 'src/reducer';
 
-
 describe('Redux Scripts Manager (entry point)', () => {
-
   it('should set the manager as the default export', () => {
     expect(scriptsManager).to.equal(_manager);
   });
@@ -17,5 +15,4 @@ describe('Redux Scripts Manager (entry point)', () => {
   it('should export the `reducer`', () => {
     expect(reducer).to.equal(_reducer);
   });
-
 });

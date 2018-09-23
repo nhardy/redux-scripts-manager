@@ -77,9 +77,10 @@ describe('Reducer', () => {
 
   it('should not mutate the state for an unknown action', () => {
     const state = {
-      some: 'property',
+      loading: [],
+      loaded: [],
+      callbacks: {},
     };
     expect(reducer(state, { type: 'UNRELATED' })).to.equal(state);
   });
-
 });

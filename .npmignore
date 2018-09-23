@@ -1,12 +1,10 @@
-*.log
-.babelrc
+babel.config.js
 .editorconfig
-.eslintrc
+.eslintrc.js
 .git
 .gitignore
 .npm
 .nyc_output
-circle.yml
+.circleci
 coverage
 node_modules
-npm-debug.log

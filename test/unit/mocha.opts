@@ -1,0 +1,4 @@
+--require ./babel-register.js
+--require ./test/requireAll.ts
+--require ./test/setup.ts
+--recursive ./test/unit/**/*.test.ts

@@ -1,43 +1,44 @@
-import { initialState } from 'src/reducer';
-
+import { Store } from 'redux';
+import _manager from 'src/manager';
+import { initialState, IScriptsState } from 'src/reducer';
 
 describe('Manager', () => {
-  let manager;
-  let sandbox;
+  let manager: typeof _manager;
+  let sandbox: sinon.SinonSandbox;
   const src = 'https://example.org/script.js';
   const mockAction = {
     type: 'SCRIPT_LOADED',
     src,
   };
-  let scriptLoaded;
-  let notify;
-  let store;
-  let getState;
-  let dispatch;
-  let subscribe;
-  let updateStore;
-  let head;
+  let scriptLoaded: sinon.SinonSpy;
+  let notify: sinon.SinonStub;
+  let store: Pick<Store, 'dispatch' | 'getState' | 'subscribe'>;
+  let getState: sinon.SinonStub;
+  let dispatch: sinon.SinonStub;
+  let subscribe: sinon.SinonStub;
+  let updateStore: (state?: IScriptsState) => void;
+  let head: { appendChild: sinon.SinonStub; };
 
   before(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     scriptLoaded = sandbox.spy(() => mockAction);
-    notify = sandbox.spy();
-    manager = proxyquire('src/manager', {
+    notify = sandbox.stub();
+    manager = proxyquire<{ default: typeof _manager }>('src/manager', {
       './actions': { scriptLoaded },
       './listeners': { notify },
     }).default;
     getState = sandbox.stub();
-    dispatch = sandbox.spy();
-    subscribe = sandbox.spy();
+    dispatch = sandbox.stub();
+    subscribe = sandbox.stub();
     store = { getState, dispatch, subscribe };
     const querySelector = sandbox.stub();
     const createElement = sandbox.stub();
-    global.window = {};
-    global.document = {
+    (global as any).window = {};
+    (global as any).document = {
       querySelector,
       createElement,
     };
-    const appendChild = sandbox.spy();
+    const appendChild = sandbox.stub();
     head = { appendChild };
   });
 
@@ -46,8 +47,8 @@ describe('Manager', () => {
   });
 
   after(() => {
-    delete global.window;
-    delete global.document;
+    delete (global as any).window;
+    delete (global as any).document;
   });
 
   [
@@ -55,12 +56,11 @@ describe('Manager', () => {
     { message: 'when using a non-default store path', path: 'scriptsLoader' },
   ].forEach(({ message, path }) => {
     context(message, () => {
-
       beforeEach(() => {
         getState.returns({
           [path || 'scripts']: initialState,
         });
-        manager(store, path);
+        manager(store as Store, path);
         updateStore = (newState = initialState) => {
           getState.returns({
             [path || 'scripts']: newState,
@@ -68,13 +68,15 @@ describe('Manager', () => {
           subscribe.lastCall.args[0]();
         };
 
-        document.querySelector.withArgs('head').returns(head);
-        document.createElement.withArgs('script').returns({});
+        (document.querySelector as sinon.SinonStub).withArgs('head')
+          .returns(head);
+        (document.createElement as sinon.SinonStub).withArgs('script')
+          .returns({});
       });
 
       it('should do nothing if there has been no change to the store', () => {
         updateStore();
-        expect(document.querySelector).to.not.have.been.called;
+        expect(document.querySelector).to.have.callCount(0);
       });
 
       context('without a custom callback', () => {
@@ -84,7 +86,7 @@ describe('Manager', () => {
             loaded: [],
             callbacks: {},
           });
-          expect(head.appendChild).to.have.been.called;
+          expect(head.appendChild).to.have.callCount(1);
           const script = head.appendChild.lastCall.args[0];
           expect(script).to.include({
             src,
@@ -107,14 +109,14 @@ describe('Manager', () => {
               [src]: onloadCallback,
             },
           });
-          expect(head.appendChild).to.have.been.called;
+          expect(head.appendChild).to.have.callCount(1);
           const script = head.appendChild.lastCall.args[0];
           expect(script).to.include({
             src,
             type: 'text/javascript',
             async: true,
           });
-          window[onloadCallback]();
+          (window as any)[onloadCallback]();
           expect(dispatch).to.have.been.calledWith(mockAction);
           expect(notify).to.have.been.calledWith(src);
         });
@@ -132,10 +134,8 @@ describe('Manager', () => {
           callbacks: {},
         });
 
-        expect(head.appendChild).to.have.been.calledOnce;
+        expect(head.appendChild).to.have.callCount(1);
       });
-
     });
   });
-
 });

@@ -1,18 +1,30 @@
-import uniq from 'lodash/uniq';
-
+import { uniq } from 'lodash';
+import { AnyAction } from 'redux';
 import {
   LOAD_SCRIPT,
   SCRIPT_LOADED,
-} from './constants';
+} from 'src/constants';
 
+export interface IScriptsState {
+  loading: string[];
+  loaded: string[];
+  callbacks: {
+    [src: string]: string;
+  };
+}
 
-export const initialState = {
+export const initialState: IScriptsState = {
   loading: [],
   loaded: [],
   callbacks: {},
 };
 
-export default function reducer(state = initialState, action) {
+/**
+ * Redux Scripts Manager Reducer
+ * @param state
+ * @param action
+ */
+export default function reducer(state = initialState, action: AnyAction): IScriptsState {
   switch (action.type) {
     case LOAD_SCRIPT:
       return {

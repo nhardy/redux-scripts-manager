@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.0] - 2018-09-23
+### Changed
+- Ported to TypeScript
+
 ## [0.3.3] - 2017-10-06
 ### Fixed
 - Babel target environment

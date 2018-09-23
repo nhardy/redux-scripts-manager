@@ -1,0 +1,115 @@
+JOB_DEFAULTS: &JOB_DEFAULTS
+  docker
+    - image: node:8
+
+version: 2
+jobs:
+  repo:
+    <<: *JOB_DEFAULTS
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - .
+
+  dependencies:
+    <<: *JOB_DEFAULTS
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .ENVIRONMENT.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ arch }}-{{ checksum "package.json" }}
+      - run:
+          name: Installing npm dependencies
+          command: npm install --no-progress --quiet
+      - save_cache:
+          key: v1-npm-deps-{{ arch }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+  lint:
+    <<: *JOB_DEFAULTS
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ arch }}-{{ checksum "package.json" }}
+      - run:
+          name: Running lint checking
+          command: npm run lint -- --quiet --format junit --output-file eslint-results.xml
+      - store_artifacts:
+          path: eslint-results.xml
+          prefix: linting
+
+  types:
+    <<: *JOB_DEFAULTS
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ arch }}-{{ checksum "package.json" }}
+      - run:
+          name: Running static type checking
+          command: npm run check-types
+
+  build:
+    <<: *JOB_DEFAULTS
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ arch }}-{{ checksum "package.json" }}
+      - run:
+          name: Building
+          command: npm run build
+
+  coverage:
+    <<: *JOB_DEFAULTS
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ arch }}-{{ checksum "package.json" }}
+      - run:
+          name: Running tests and collecting code coverage results
+          command: npm run coveralls
+          environment:
+            MOCHA_FILE: unit-test-results.xml
+      - store_artifacts:
+         path: unit-test-results.xml
+         prefix: unit-tests
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - repo
+      - dependencies:
+          requires:
+            - repo
+      - lint:
+          requires:
+            - repo
+      - types:
+          requires:
+            - repo
+      - build:
+          requires:
+            - repo
+      - coverage:
+          requires:
+            - repo
+            - lint
+            - types
+            - build

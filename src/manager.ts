@@ -1,22 +1,27 @@
-import difference from 'lodash/difference';
-
+import { difference } from 'lodash';
+import { Store } from 'redux';
 import { scriptLoaded } from './actions';
-import { initialState } from './reducer';
+import { initialState, IScriptsState } from './reducer';
 import { notify } from './listeners';
 
-
-export default function manager(store, path = 'scripts') {
+/**
+ * Registers redux-scripts-manager with the store
+ * @param store Redux Store
+ * @param key Reducer Key in Store
+ */
+export default function manager<S extends Store>(store: S, key = 'scripts') {
   let prevState = initialState;
 
   store.subscribe(() => {
-    const state = store.getState()[path];
+    const state = store.getState()[key] as IScriptsState;
     if (state === prevState) return;
     const diff = difference(state.loading, prevState.loading);
     prevState = state;
     if (!diff.length) return;
 
+    const head = document.querySelector('head')!;
+
     diff.forEach((src) => {
-      const head = document.querySelector('head');
       const script = document.createElement('script');
       script.src = src;
       script.type = 'text/javascript';
@@ -24,10 +29,10 @@ export default function manager(store, path = 'scripts') {
 
       const callbackName = state.callbacks[src];
       if (callbackName) {
-        window[callbackName] = () => {
+        (window as any)[callbackName] = () => {
           store.dispatch(scriptLoaded(src));
           notify(src);
-          delete window[callbackName];
+          delete (window as any)[callbackName];
         };
       } else {
         script.onload = () => {
